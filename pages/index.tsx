@@ -8,6 +8,8 @@ import ReactMarkdown from 'react-markdown';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { Document } from 'langchain/document';
 import TemperatureDropdown from "@/components/temperature-dropdown";
+import GradeDropdown from "@/components/grade-dropdown";
+import SubjectDropdown from "@/components/subject-dropdown";
 import {
   Accordion,
   AccordionContent,
@@ -21,6 +23,8 @@ export default function Home() {
   const [sourceDocs, setSourceDocs] = useState<Document[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [selectedItemTemperature, setSelectedItemTemperature] = useState<number>(0);
+  const [selectedItemGrade, setSelectedItemGrade] = useState<string>('');
+  const [selectedItemSubject, setSelectedItemSubject] = useState<string>('');
   const [messageState, setMessageState] = useState<{
     messages: Message[];
     pending?: string;
@@ -168,6 +172,19 @@ export default function Home() {
     setSelectedItemTemperature(temperature);
   };
 
+  const gradeDropdownItem = (grade: string) => {
+    console.log('Grade selected', grade);
+    setSelectedItemGrade(grade);
+  };
+
+  const subjectDropdownItem = (subject: string) => {
+    console.log('subject selected', subject);
+    setSelectedItemSubject(subject);
+  };
+
+  useEffect(() => {
+  }, [selectedItemGrade]);
+
   return (
     <>
       <Layout>
@@ -175,6 +192,12 @@ export default function Home() {
           <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter text-center">
             BriCBSE
           </h1>
+          <div>
+            < GradeDropdown dropdownItem={gradeDropdownItem} setSelectedItem={setSelectedItemGrade} selectedItem={selectedItemGrade}/>
+            {selectedItemGrade.length !== 0 &&
+              < SubjectDropdown dropdownItem={subjectDropdownItem} setSelectedItem={setSelectedItemSubject} selectedItem={selectedItemSubject} gradeSelected={selectedItemGrade}/>
+            }
+          </div>
           <main className={styles.main}>
             <div className={styles.cloud}>
               <div ref={messageListRef} className={styles.messagelist}>
