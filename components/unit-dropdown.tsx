@@ -7,26 +7,26 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function SubjectDropdown(props: any) {
-  const [ selectedItemName, setSelectedItemName ] = useState('Subject');
+export default function UnitDropdown(props: any) {
+  const [ selectedItemName, setSelectedItemName ] = useState('Unit');
 
   const menuList = useMemo(() => {
     const grades = Object.keys(syllabus);
-    const gradeSelected = props.gradeSelected as string;
     // @ts-ignore
-    const subjects = Object.keys(syllabus[gradeSelected]);
-    const menuList = subjects.map((subject) =>
-      <Menu.Item key={subject}>
+    const subjects = syllabus[props.gradeSelected];
+    const units = Object.keys(subjects[props.subjectSelected].Units);
+    const menuList = units.map((unit) =>
+      <Menu.Item key={unit}>
         {({ active }) => (
           <a
-            onClick={(e) => props.dropdownItem(subject)}
+            onClick={(e) => props.dropdownItem(unit)}
             href="#"
             className={classNames(
               active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
               'block px-4 py-2 text-sm'
             )}
           >
-            {subject}
+            {unit}
           </a>
         )}
       </Menu.Item>
@@ -35,7 +35,7 @@ export default function SubjectDropdown(props: any) {
   }, []);
   useEffect(() => {
     if (props.selectedItem) setSelectedItemName(`${props.selectedItem}`);
-    else setSelectedItemName('Subject');
+    else setSelectedItemName('Unit');
   }, [props.selectedItem]);
   return (
     <Menu as="div" className="w-1/6 relative inline-block text-left mb-2 float-left mr-1">

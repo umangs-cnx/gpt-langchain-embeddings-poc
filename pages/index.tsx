@@ -10,6 +10,7 @@ import { Document } from 'langchain/document';
 import TemperatureDropdown from "@/components/temperature-dropdown";
 import GradeDropdown from "@/components/grade-dropdown";
 import SubjectDropdown from "@/components/subject-dropdown";
+import UnitDropdown from "@/components/unit-dropdown";
 import {
   Accordion,
   AccordionContent,
@@ -25,6 +26,7 @@ export default function Home() {
   const [selectedItemTemperature, setSelectedItemTemperature] = useState<number>(0);
   const [selectedItemGrade, setSelectedItemGrade] = useState<string>('');
   const [selectedItemSubject, setSelectedItemSubject] = useState<string>('');
+  const [selectedItemUnit, setSelectedItemUnit] = useState<string>('');
   const [messageState, setMessageState] = useState<{
     messages: Message[];
     pending?: string;
@@ -182,6 +184,11 @@ export default function Home() {
     setSelectedItemSubject(subject);
   };
 
+  const unitDropdownItem = (unit: string) => {
+    console.log('unit selected', unit);
+    setSelectedItemUnit(unit);
+  };
+
   useEffect(() => {
   }, [selectedItemGrade]);
 
@@ -196,6 +203,9 @@ export default function Home() {
             < GradeDropdown dropdownItem={gradeDropdownItem} setSelectedItem={setSelectedItemGrade} selectedItem={selectedItemGrade}/>
             {selectedItemGrade.length !== 0 &&
               < SubjectDropdown dropdownItem={subjectDropdownItem} setSelectedItem={setSelectedItemSubject} selectedItem={selectedItemSubject} gradeSelected={selectedItemGrade}/>
+            }
+            {selectedItemGrade.length !== 0 && selectedItemSubject.length !== 0 &&
+              < UnitDropdown dropdownItem={unitDropdownItem} setSelectedItem={setSelectedItemUnit} selectedItem={selectedItemUnit} gradeSelected={selectedItemGrade} subjectSelected={selectedItemSubject}/>
             }
           </div>
           <main className={styles.main}>
