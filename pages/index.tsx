@@ -7,7 +7,7 @@ import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { Document } from 'langchain/document';
-import Dropdown from './dropdown';
+import TemperatureDropdown from "@/components/temperature-dropdown";
 import {
   Accordion,
   AccordionContent,
@@ -20,7 +20,7 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [sourceDocs, setSourceDocs] = useState<Document[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [selectedItem, setSelectedItem] = useState<number>(0);
+  const [selectedItemTemperature, setSelectedItemTemperature] = useState<number>(0);
   const [messageState, setMessageState] = useState<{
     messages: Message[];
     pending?: string;
@@ -86,7 +86,7 @@ export default function Home() {
         body: JSON.stringify({
           question,
           history,
-          temperature: selectedItem
+          temperature: selectedItemTemperature
         }),
         signal: ctrl.signal,
         onmessage: (event) => {
@@ -163,9 +163,9 @@ export default function Home() {
     }
   }, [chatMessages]);
 
-  const dropdownItem = (temperature: number) => {
+  const temperatureDropdownItem = (temperature: number) => {
     console.log('Temperature selected', temperature);
-    setSelectedItem(temperature);
+    setSelectedItemTemperature(temperature);
   };
 
   return (
@@ -276,7 +276,7 @@ export default function Home() {
               </div>
             </div>
             <div className={styles.center}>
-            < Dropdown dropdownItem={dropdownItem} setSelectedItem={setSelectedItem} selectedItem={selectedItem}/>
+            < TemperatureDropdown dropdownItem={temperatureDropdownItem} setSelectedItem={setSelectedItemTemperature} selectedItem={selectedItemTemperature}/>
               <div className={styles.cloudform}>
                 <form onSubmit={handleSubmit}>
                   <textarea

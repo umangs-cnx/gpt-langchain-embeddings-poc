@@ -6,7 +6,7 @@ function classNames(...classes: any) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Dropdown(props: any) {
+export default function TemperatureDropdown(props: any) {
     const [ selectedItemName, setSelectedItemName ] = useState('Temperature');
     useEffect(() => {
         if (props.selectedItem == 0) setSelectedItemName('Strict');
