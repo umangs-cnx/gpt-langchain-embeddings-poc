@@ -1,7 +1,7 @@
 module.exports = {
     apps: [
       {
-        name: "PDF-Test Chatbot",
+        name: "Embeddings Tutor POC",
         script: "npm start",
   
         // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
@@ -12,4 +12,3 @@ module.exports = {
       }
     ]
   };
-  
