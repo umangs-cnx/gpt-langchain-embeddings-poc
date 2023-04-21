@@ -9,12 +9,12 @@ function classNames(...classes: any) {
 
 export default function UnitDropdown(props: any) {
   const [ selectedItemName, setSelectedItemName ] = useState('Unit');
+  // @ts-ignore
+  const subjects = syllabus[props.gradeSelected];
+  const unitsObject = subjects[props.subjectSelected].Units;
 
   const menuList = useMemo(() => {
-    const grades = Object.keys(syllabus);
-    // @ts-ignore
-    const subjects = syllabus[props.gradeSelected];
-    const units = Object.keys(subjects[props.subjectSelected].Units);
+    const units = Object.keys(unitsObject);
     const menuList = units.map((unit) =>
       <Menu.Item key={unit}>
         {({ active }) => (
@@ -34,7 +34,12 @@ export default function UnitDropdown(props: any) {
     return menuList;
   }, []);
   useEffect(() => {
-    if (props.selectedItem) setSelectedItemName(`${props.selectedItem}`);
+    if (props.selectedItem) {
+      setSelectedItemName(`${props.selectedItem}`);
+      const summary = unitsObject[props.selectedItem].Summary;
+      const questions = unitsObject[props.selectedItem].SuggestedQuestions;
+      props.setInitialMessage(summary, questions);
+    }
     else setSelectedItemName('Unit');
   }, [props.selectedItem]);
   return (

@@ -189,9 +189,18 @@ export default function Home() {
     setSelectedItemUnit(unit);
   };
 
-  useEffect(() => {
-  }, [selectedItemGrade]);
+  const setInitialMessage = (message: string, listOfQuestions: string[]) => {
+    let newMessage = message + '\n\nHere are a few questions you can ask:';
+    listOfQuestions.forEach((question) => {
+      newMessage = newMessage + '\n\n1. ' + question;
+    });
 
+    setMessageState((prevState) => {
+      const updatedState = {...prevState}
+      updatedState.messages = [{message: newMessage, type: "apiMessage"}];
+      return updatedState;
+    });
+  }
   return (
     <>
       <Layout>
@@ -205,7 +214,7 @@ export default function Home() {
               < SubjectDropdown dropdownItem={subjectDropdownItem} setSelectedItem={setSelectedItemSubject} selectedItem={selectedItemSubject} gradeSelected={selectedItemGrade}/>
             }
             {selectedItemGrade.length !== 0 && selectedItemSubject.length !== 0 &&
-              < UnitDropdown dropdownItem={unitDropdownItem} setSelectedItem={setSelectedItemUnit} selectedItem={selectedItemUnit} gradeSelected={selectedItemGrade} subjectSelected={selectedItemSubject}/>
+              < UnitDropdown dropdownItem={unitDropdownItem} setSelectedItem={setSelectedItemUnit} selectedItem={selectedItemUnit} gradeSelected={selectedItemGrade} subjectSelected={selectedItemSubject} setInitialMessage={setInitialMessage}/>
             }
           </div>
           <main className={styles.main}>
@@ -248,7 +257,7 @@ export default function Home() {
                       <div key={`chatMessage-${index}`} className={className}>
                         {icon}
                         <div className={styles.markdownanswer}>
-                          <ReactMarkdown linkTarget="_blank">
+                          <ReactMarkdown linkTarget="_blank" >
                             {message.message}
                           </ReactMarkdown>
                         </div>
@@ -361,7 +370,7 @@ export default function Home() {
           </main>
         </div>
         <footer className="m-auto p-4">
-          <a href="https://birdai.com/">
+          <a href="https://birdai.com/" target="_blank">
             Built by BirdAI
           </a>
         </footer>
