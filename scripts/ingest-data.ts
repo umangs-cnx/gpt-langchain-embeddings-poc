@@ -25,20 +25,27 @@ export const run = async () => {
       chunkOverlap: 200,
     });
 
-    const docs = await textSplitter.splitDocuments(rawDocs);
+    let docs = await textSplitter.splitDocuments(rawDocs);
+    docs = docs.map((doc) => {
+      const location = doc.metadata.source.split('\\');
+      return {
+        ...doc,
+        pageContent: location[location.length - 2] + location[location.length - 1].split('.')[1] + doc.pageContent
+      }
+    });
     console.log('split docs', docs);
 
     console.log('creating vector store...');
     /*create and store the embeddings in the vectorStore*/
-    const embeddings = new OpenAIEmbeddings();
-    const index = pinecone.Index(PINECONE_INDEX_NAME); //change to your own index name
-
-    //embed the PDF documents
-    await PineconeStore.fromDocuments(docs, embeddings, {
-      pineconeIndex: index,
-      namespace: PINECONE_NAME_SPACE,
-      textKey: 'text',
-    });
+    // const embeddings = new OpenAIEmbeddings();
+    // const index = pinecone.Index(PINECONE_INDEX_NAME); //change to your own index name
+    //
+    // //embed the PDF documents
+    // await PineconeStore.fromDocuments(docs, embeddings, {
+    //   pineconeIndex: index,
+    //   namespace: PINECONE_NAME_SPACE,
+    //   textKey: 'text',
+    // });
   } catch (error) {
     console.log('error', error);
     throw new Error('Failed to ingest your data');

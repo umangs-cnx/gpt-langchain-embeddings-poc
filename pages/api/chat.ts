@@ -9,7 +9,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { question, history, temperature } = req.body;
+  const { question, history, temperature, grade, subject, unit } = req.body;
   console.log(`Question: ${question}; Temperature: ${temperature}`);
 
   if (!question) {

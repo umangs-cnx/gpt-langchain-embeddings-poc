@@ -92,7 +92,10 @@ export default function Home() {
         body: JSON.stringify({
           question,
           history,
-          temperature: selectedItemTemperature
+          temperature: selectedItemTemperature,
+          grade: selectedItemGrade,
+          subject: selectedItemSubject,
+          unit: selectedItemUnit
         }),
         signal: ctrl.signal,
         onmessage: (event) => {
