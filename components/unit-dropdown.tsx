@@ -8,18 +8,19 @@ function classNames(...classes: any) {
 }
 
 export default function UnitDropdown(props: any) {
-  const [ selectedItemName, setSelectedItemName ] = useState('Unit');
+  const { boardSelected, gradeSelected, setSelectedItem } = props;
   // @ts-ignore
-  const subjects = syllabus[props.gradeSelected];
-  const unitsObject = subjects[props.subjectSelected].Units;
-
+  const grades = syllabus[boardSelected];
+  // @ts-ignore
+  const gradesInfo = grades[gradeSelected];
+  const unitsObject = gradesInfo[props.subjectSelected];
   const menuList = useMemo(() => {
     const units = Object.keys(unitsObject);
     const menuList = units.map((unit) =>
       <Menu.Item key={unit}>
         {({ active }) => (
           <a
-            onClick={(e) => props.dropdownItem(unit)}
+            onClick={(e) => setSelectedItem(unit)}
             href="#"
             className={classNames(
               active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
@@ -32,21 +33,19 @@ export default function UnitDropdown(props: any) {
       </Menu.Item>
     );
     return menuList;
-  }, []);
+  }, [setSelectedItem, unitsObject]);
   useEffect(() => {
     if (props.selectedItem) {
-      setSelectedItemName(`${props.selectedItem}`);
-      const summary = unitsObject[props.selectedItem].Summary;
-      const questions = unitsObject[props.selectedItem].SuggestedQuestions;
+      const summary = unitsObject[props.selectedItem].summary;
+      const questions = unitsObject[props.selectedItem].suggestedQuestions;
       props.setInitialMessage(summary, questions);
     }
-    else setSelectedItemName('Unit');
-  }, [props.selectedItem]);
+  }, [props, unitsObject]);
   return (
     <Menu as="div" className="w-1/6 relative inline-block text-left mb-2 float-left mr-1">
       <div>
         <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-          {selectedItemName}
+          {props.selectedItem || "Unit"}
           <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
         </Menu.Button>
       </div>

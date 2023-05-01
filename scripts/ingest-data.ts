@@ -30,7 +30,7 @@ export const run = async () => {
       const location = doc.metadata.source.split('\\');
       return {
         ...doc,
-        pageContent: location[location.length - 2] + location[location.length - 1].split('.')[1] + doc.pageContent
+        pageContent: 'Grade:' + location[location.length - 3] + ' Subject:' + location[location.length - 2] + ' Chapter:' + location[location.length - 1].split('.')[0] + ' ' + doc.pageContent
       }
     });
     console.log('split docs', docs);
