@@ -8,18 +8,17 @@ function classNames(...classes: any) {
 }
 
 export default function SubjectDropdown(props: any) {
-  const [ selectedItemName, setSelectedItemName ] = useState('Subject');
-
+  const {boardSelected, gradeSelected, setSelectedItem} = props;
   const menuList = useMemo(() => {
-    const grades = Object.keys(syllabus);
-    const gradeSelected = props.gradeSelected as string;
     // @ts-ignore
-    const subjects = Object.keys(syllabus[gradeSelected]);
+    const grades = syllabus[boardSelected];
+    // @ts-ignore
+    const subjects = Object.keys(grades[gradeSelected]);
     const menuList = subjects.map((subject) =>
       <Menu.Item key={subject}>
         {({ active }) => (
           <a
-            onClick={(e) => props.dropdownItem(subject)}
+            onClick={(e) => setSelectedItem(subject)}
             href="#"
             className={classNames(
               active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
@@ -32,16 +31,13 @@ export default function SubjectDropdown(props: any) {
       </Menu.Item>
     );
     return menuList;
-  }, []);
-  useEffect(() => {
-    if (props.selectedItem) setSelectedItemName(`${props.selectedItem}`);
-    else setSelectedItemName('Subject');
-  }, [props.selectedItem]);
+  }, [boardSelected, gradeSelected, setSelectedItem]);
+
   return (
     <Menu as="div" className="w-1/6 relative inline-block text-left mb-2 float-left mr-1">
       <div>
         <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-          {selectedItemName}
+          {props.selectedItem || "Subject"}
           <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
         </Menu.Button>
       </div>

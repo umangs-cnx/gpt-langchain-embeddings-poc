@@ -7,38 +7,32 @@ function classNames(...classes: any) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function GradeDropdown(props: any) {
-  const {boardSelected, setSelectedItem} = props;
+export default function BoardDropdown(props: any) {
     const menuList = useMemo(() => {
-      if (!boardSelected) return;
-      // @ts-ignore
-      const boardInformation = syllabus[boardSelected];
-      // @ts-ignore
-      const grades = Object.keys(boardInformation);
-      const menuList = grades.map((grade) =>
-        <Menu.Item key={grade}>
+      const boards = Object.keys(syllabus);
+      const menuList = boards.map((board) =>
+        <Menu.Item key={board}>
           {({ active }) => (
             <a
-              onClick={(e) => setSelectedItem(grade)}
+              onClick={(e) => props.setSelectedItem(board)}
               href="#"
               className={classNames(
                 active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                 'block px-4 py-2 text-sm'
               )}
             >
-              Grade {grade}
+              {board}
             </a>
           )}
         </Menu.Item>
       );
       return menuList;
-    }, [boardSelected, setSelectedItem]);
-
+    }, []);
     return (
       <Menu as="div" className="w-1/6 relative inline-block text-left mb-2 float-left mr-1">
           <div>
               <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                  {props.selectedItem || "Grade"}
+                  {props.selectedItem || "Board"}
                   <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
               </Menu.Button>
           </div>

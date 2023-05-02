@@ -17,6 +17,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import BoardDropdown from "@/components/board-dropdown";
 
 export default function Home() {
   const [query, setQuery] = useState<string>('');
@@ -24,6 +25,7 @@ export default function Home() {
   const [sourceDocs, setSourceDocs] = useState<Document[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [selectedItemTemperature, setSelectedItemTemperature] = useState<number>(0);
+  const [selectedItemBoard, setSelectedItemBoard] = useState<string>('');
   const [selectedItemGrade, setSelectedItemGrade] = useState<string>('');
   const [selectedItemSubject, setSelectedItemSubject] = useState<string>('');
   const [selectedItemUnit, setSelectedItemUnit] = useState<string>('');
@@ -92,7 +94,11 @@ export default function Home() {
         body: JSON.stringify({
           question,
           history,
-          temperature: selectedItemTemperature
+          temperature: selectedItemTemperature,
+          board: selectedItemBoard,
+          grade: selectedItemGrade,
+          subject: selectedItemSubject,
+          unit: selectedItemUnit
         }),
         signal: ctrl.signal,
         onmessage: (event) => {
@@ -173,23 +179,9 @@ export default function Home() {
     console.log('Temperature selected', temperature);
     setSelectedItemTemperature(temperature);
   };
-
-  const gradeDropdownItem = (grade: string) => {
-    console.log('Grade selected', grade);
-    setSelectedItemGrade(grade);
-  };
-
-  const subjectDropdownItem = (subject: string) => {
-    console.log('subject selected', subject);
-    setSelectedItemSubject(subject);
-  };
-
-  const unitDropdownItem = (unit: string) => {
-    console.log('unit selected', unit);
-    setSelectedItemUnit(unit);
-  };
-
   const setInitialMessage = (message: string, listOfQuestions: string[]) => {
+    console.log(`message: ${message}, listOfQuestions: ${listOfQuestions}`);
+    if (listOfQuestions.length < 1) return;
     let newMessage = message + '\n\nHere are a few questions you can ask:';
     listOfQuestions.forEach((question) => {
       newMessage = newMessage + '\n\n1. ' + question;
@@ -201,6 +193,25 @@ export default function Home() {
       return updatedState;
     });
   }
+
+  const setSelectedBoard = (boardName: string) => {
+    setSelectedItemBoard(boardName);
+    setSelectedItemGrade('');
+    setSelectedItemSubject('');
+    setSelectedItemUnit('');
+  }
+
+  const setSelectedGrade = (gradeName: string) => {
+    setSelectedItemGrade(gradeName);
+    setSelectedItemSubject('');
+    setSelectedItemUnit('');
+  }
+
+  const setSelectedSubject = (subjectName: string) => {
+    setSelectedItemSubject(subjectName);
+    setSelectedItemUnit('');
+  }
+
   return (
     <>
       <Layout>
@@ -209,12 +220,15 @@ export default function Home() {
             BriCBSE
           </h1>
           <div>
-            < GradeDropdown dropdownItem={gradeDropdownItem} setSelectedItem={setSelectedItemGrade} selectedItem={selectedItemGrade}/>
+            <BoardDropdown setSelectedItem={setSelectedBoard} selectedItem={selectedItemBoard}/>
+            {selectedItemBoard.length !== 0 &&
+              < GradeDropdown setSelectedItem={setSelectedGrade}
+                             selectedItem={selectedItemGrade} boardSelected={selectedItemBoard} />}
             {selectedItemGrade.length !== 0 &&
-              < SubjectDropdown dropdownItem={subjectDropdownItem} setSelectedItem={setSelectedItemSubject} selectedItem={selectedItemSubject} gradeSelected={selectedItemGrade}/>
+              < SubjectDropdown setSelectedItem={setSelectedSubject} selectedItem={selectedItemSubject} boardSelected={selectedItemBoard} gradeSelected={selectedItemGrade}/>
             }
             {selectedItemGrade.length !== 0 && selectedItemSubject.length !== 0 &&
-              < UnitDropdown dropdownItem={unitDropdownItem} setSelectedItem={setSelectedItemUnit} selectedItem={selectedItemUnit} gradeSelected={selectedItemGrade} subjectSelected={selectedItemSubject} setInitialMessage={setInitialMessage}/>
+              < UnitDropdown setSelectedItem={setSelectedItemUnit} selectedItem={selectedItemUnit} boardSelected={selectedItemBoard} gradeSelected={selectedItemGrade} subjectSelected={selectedItemSubject} setInitialMessage={setInitialMessage}/>
             }
           </div>
           <main className={styles.main}>
